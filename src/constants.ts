@@ -1,5 +1,5 @@
 // export const API_URL = "https://4xspflf6-3000.uks1.devtunnels.ms";
-export const API_URL = "https://trustfinance-api.onrender.com";
+export const API_URL = "https://trust-finance-api.onrender.com";
 // export const DASHBOARD_URL = "https://4xspflf6-8081.uks1.devtunnels.ms";
 export const DASHBOARD_URL = "https://dashboard.trustfinancegroup.online";
 
