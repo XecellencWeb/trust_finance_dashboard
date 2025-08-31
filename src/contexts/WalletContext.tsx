@@ -1,6 +1,26 @@
 import { createContext, ReactNode, useCallback, useContext } from "react";
 
 import { useFetch } from "@/hooks/use-fetch";
+import { toast } from "sonner";
+import { axiosClient } from "@/axios/axios";
+import { useNavigate } from "react-router-dom";
+
+export type WithdrawRequest = {
+  amount: number;
+  accountHolder: string;
+  bankName: string;
+  accountNumber: string;
+  routingNumber: string;
+  accountType: "checking" | "savings" | "business";
+  notes?: string;
+};
+
+export type WithdrawResponse = WithdrawRequest & {
+  _id: string;
+  status: "pending" | "approved" | "rejected";
+  createdAt: string;
+  updatedAt: string;
+};
 
 export interface WalletTransaction {
   _id: string;
@@ -38,10 +58,16 @@ const WalletCntxt = createContext<{
     limit?: number;
   }) => ReturnType<typeof useFetch>;
   walletData?: BankAccount;
+  getWithdrawRequest?: (id: string) => ReturnType<typeof useFetch>;
+  withdrawMoney?: (request: WithdrawRequest) => Promise<void>;
+  recentWithdraws?: WithdrawResponse[];
 }>({});
 
 const WalletContextProvider = ({ children }: { children: ReactNode }) => {
+  const navigate = useNavigate();
+
   const { data: walletData, refetch } = useFetch<BankAccount>("/wallet");
+  const { data: recentWithdraws } = useFetch(`/withdraws/for-user`);
 
   const refreshFunc = useCallback(refetch, [refetch]);
 
@@ -57,8 +83,30 @@ const WalletContextProvider = ({ children }: { children: ReactNode }) => {
       [walletData?._id]
     );
 
+  const withdrawMoney = async (withdraw: WithdrawRequest) => {
+    try {
+      const loading = toast.loading("Processing...");
+      const response = await axiosClient.post("/withdraws", withdraw);
+      toast.dismiss(loading);
+      navigate(`/withdraws/${response.data._id}`);
+    } catch (error) {
+      toast.error(error?.response.data.message);
+    }
+  };
+
+  const getWithdrawRequest = (id: string) => useFetch(`/withdraws/${id}`, [id]);
+
   return (
-    <WalletCntxt.Provider value={{ refreshFunc, walletData, getTransactions }}>
+    <WalletCntxt.Provider
+      value={{
+        refreshFunc,
+        walletData,
+        getTransactions,
+        withdrawMoney,
+        getWithdrawRequest,
+        recentWithdraws,
+      }}
+    >
       {children}
     </WalletCntxt.Provider>
   );
@@ -72,6 +120,5 @@ export const useWallet = () => {
 
   return context;
 };
-
 
 export default WalletContextProvider;

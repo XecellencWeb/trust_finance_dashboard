@@ -1,12 +1,16 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/organisms/AppSidebar";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/contexts/AuthContext";
+import { FormatterUtil } from "@/utils/formater";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
 export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  const { user } = useAuth();
+
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full bg-background gap-0">
@@ -19,7 +23,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               <SidebarTrigger />
               <div>
                 <h1 className="text-lg font-semibold">
-                  Banking Dashboard
+                  Good {FormatterUtil.getTimeOfDay()} {user.firstName}
                 </h1>
                 <p className="text-sm text-muted-foreground">
                   Manage your financial operations

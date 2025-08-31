@@ -8,16 +8,33 @@ export class FormatterUtil {
    */
   static formatDate(
     date: string | Date,
-    locale: string = 'en-US',
+    locale: string = "en-US",
     options?: Intl.DateTimeFormatOptions
   ): string {
-    const d = typeof date === 'string' ? new Date(date) : date;
+    const d = typeof date === "string" ? new Date(date) : date;
     return new Intl.DateTimeFormat(locale, {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
+      year: "numeric",
+      month: "short",
+      day: "numeric",
       ...options,
     }).format(d);
+  }
+
+  /**
+   * Get the current time of the day
+   * @param date 
+   * @returns 
+   */
+  static getTimeOfDay(date = new Date()) {
+    const hour = date.getUTCHours(); // use getHours() if you want local time
+
+    if (hour >= 5 && hour < 12) {
+      return "morning";
+    } else if (hour >= 12 && hour < 17) {
+      return "afternoon";
+    } else {
+      return "evening";
+    }
   }
 
   /**
@@ -28,11 +45,11 @@ export class FormatterUtil {
    */
   static formatCurrency(
     amount: number,
-    currency: string = 'USD',
-    locale: string = 'en-US'
+    currency: string = "USD",
+    locale: string = "en-US"
   ): string {
     return new Intl.NumberFormat(locale, {
-      style: 'currency',
+      style: "currency",
       currency,
     }).format(amount);
   }
@@ -42,8 +59,8 @@ export class FormatterUtil {
    */
   static formatPhone(phone: string): string {
     return phone
-      .replace(/\D/g, '')
-      .replace(/^(\d{1,3})(\d{3})(\d{3,4})(\d+)$/, '+$1 $2 $3 $4');
+      .replace(/\D/g, "")
+      .replace(/^(\d{1,3})(\d{3})(\d{3,4})(\d+)$/, "+$1 $2 $3 $4");
   }
 
   /**
@@ -57,9 +74,7 @@ export class FormatterUtil {
    * Capitalize each word in a sentence
    */
   static capitalize(text: string): string {
-    return text
-      .toLowerCase()
-      .replace(/\b\w/g, (char) => char.toUpperCase());
+    return text.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
   }
 
   /**
@@ -68,6 +83,6 @@ export class FormatterUtil {
    * @param maxLength max characters to keep
    */
   static truncateText(text: string, maxLength: number = 50): string {
-    return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+    return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
   }
 }

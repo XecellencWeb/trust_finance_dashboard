@@ -13,6 +13,7 @@ import SettingsPage from "./pages/SettingsPage";
 import ProfilePage from "./pages/ProfilePage";
 import Users from "./pages/Users";
 import { AllContext } from "./contexts/composition";
+import WithdrawReceipt from "./pages/WithdrawReceipt";
 
 const App = () => (
   <TooltipProvider>
@@ -60,6 +61,16 @@ const App = () => (
                 <ProtectedRoute restricted>
                   <DashboardLayout>
                     <DepositsPage />
+                  </DashboardLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/withdraws/:id"
+              element={
+                <ProtectedRoute restricted>
+                  <DashboardLayout>
+                    <WithdrawReceipt />
                   </DashboardLayout>
                 </ProtectedRoute>
               }
