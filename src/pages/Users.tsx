@@ -24,12 +24,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { usePaginationQuery } from "@/components/custom/custom-pagination";
+import {
+  PaginationControl,
+  usePaginationQuery,
+} from "@/components/custom/custom-pagination";
 import { AccountStatus, useUser } from "@/contexts/UserContext";
 import { FormatterUtil } from "@/utils/formater";
 
 const Users = () => {
-  const { page, setPage } = usePaginationQuery();
+  const { page, limit, setPage } = usePaginationQuery();
   const {
     users,
     suspendUser,
@@ -181,6 +184,13 @@ const Users = () => {
               ))}
             </TableBody>
           </Table>
+
+          <PaginationControl
+            page={page}
+            total={users?.total ?? 0}
+            onPageChange={setPage}
+            limit={limit}
+          />
         </CardContent>
       </Card>
     </div>

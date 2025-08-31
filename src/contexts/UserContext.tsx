@@ -50,7 +50,8 @@ const UserContextProvider = ({ children }) => {
   const { page, limit, setPage } = usePaginationQuery();
   const [searchTerm, setSearchTerm] = useState("");
   const { data: users, refetch } = useFetch(
-    `/user/all?page=${page}&limit=${limit}&search=${searchTerm}`
+    `/user/all?page=${page}&limit=${limit}&search=${searchTerm}`,
+    [searchTerm, page, limit]
   );
 
   const suspendUser = async (userId: string) => {
